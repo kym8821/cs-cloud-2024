@@ -58,7 +58,22 @@ async function fetchMetadata(path, token) {
 let ipInfo = undefined;
 function fetchIpInfo() {
   return new Promise((resolve, reject) => {
-    if (ipInfo) resolve(ipInfo);
+    if (ipInfo) {
+      try {
+        const loc = JSON.parse(ipdata);
+        const result = {
+          ip: loc.ip,
+          country: loc.country_name,
+          region: loc.region,
+          lat_long: `${loc.latitude}, ${loc.longitude}`,
+          timezone: loc.timezone,
+        };
+        return resolve(result);
+      } catch (error) {
+        console.error('Invalid IP data, fetching new data...');
+      }
+    }
+
     const options = {
       path: '/json/',
       host: 'ipapi.co',

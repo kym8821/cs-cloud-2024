@@ -3,7 +3,7 @@
 apt update -y
 apt install nodejs unzip wget npm mysql-client awscli tree nmap -y
 cd /home/ubuntu
-git clone https://github.com/ddps-lab/cs-cloud-2024.git
+git clone https://github.com/kym8821/cs-cloud-2024.git 
 cd /home/ubuntu/cs-cloud-2024/
 chown ubuntu -R monolithic_code/
 cd monolithic_code
