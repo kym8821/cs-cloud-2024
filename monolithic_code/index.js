@@ -34,9 +34,9 @@ async function fetchToken() {
 }
 
 // 주어진 메타데이터 경로에서 데이터를 가져오는 함수
-let metaData = undefined;
+let metaData = {};
 async function fetchMetadata(path, token) {
-  if (metaData) return metaData;
+  if (metaData[path]) return metaData[path];
   try {
     const response = await fetch(`http://169.254.169.254/latest/meta-data/${path}`, {
       headers: {
@@ -47,20 +47,20 @@ async function fetchMetadata(path, token) {
     if (!response.ok) {
       throw new Error(`Failed to fetch metadata: ${response.statusText}`);
     }
-    metaData = await response.text();
-    return metaData;
+    metaData[path] = await response.text();
+    return metaData[path];
   } catch (error) {
     console.error('Error fetching metadata:', error.message);
     throw error;
   }
 }
 
-let ipInfo = undefined;
+let ipData = undefined;
 function fetchIpInfo() {
   return new Promise((resolve, reject) => {
-    if (ipInfo) {
+    if (ipData) {
       try {
-        const loc = JSON.parse(ipdata);
+        const loc = JSON.parse(ipData);
         const result = {
           ip: loc.ip,
           country: loc.country_name,
@@ -90,6 +90,7 @@ function fetchIpInfo() {
 
         resp.on('end', () => {
           try {
+            ipData = body;
             const loc = JSON.parse(body);
             const result = {
               ip: loc.ip,
@@ -98,7 +99,6 @@ function fetchIpInfo() {
               lat_long: `${loc.latitude}, ${loc.longitude}`,
               timezone: loc.timezone,
             };
-            ipInfo = result;
             resolve(result);
           } catch (error) {
             reject(error);
